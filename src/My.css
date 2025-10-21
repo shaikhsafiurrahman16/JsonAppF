@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
+
+
+/* // matches: {
+//     value: "attribute contains",
+//     fiels: [
+//         value : "asd",
+//         css_path : "asdas",
+//         css_path : "asdas",
+//     ]
+// } */
+
+
+
+
+
+/* // {
+//         "name": "assert",
+//         "fields": [
+//             {
+//                 "label": "Matches",
+//                 "values": [
+//                     {
+//                         "option": "attribute contains",
+//                         "fields": [
+//                             {
+//                                 "label": "CSS Path"
+//                             },
+//                             {
+//                                 "label": "Attribute Name",
+//                             },
+//                             {
+//                                 "label": "Value"
+//                             }
+//                         ]
+//                     }
+//                 ]
+//             },
+//             {
+//                 "label": "Name"
+//             },
+//             {
+//                 "label": "Description"
+//             },
+//             {
+//                 "label": "Custom Error ?"
+//             },
+//             {
+//                 "label": "CSS Path"
+//             }
+//         ],
+//         "Advance": [
+//             {
+//                 "fail": "continue",
+//                 "element": "custom"
+//             },
+//             {
+//                 "random": true,
+//                 "network": true,
+//                 "step": true,
+//                 "visible": true
+//             }
+//         ]
+        
+//     } */
+
+
+
+/* 
+ */

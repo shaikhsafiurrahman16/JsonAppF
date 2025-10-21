@@ -1,0 +1,1782 @@
+[
+    {
+        "name": "alert",
+        "description": "Affects a currently showing alert. This command instructs Selenium to accept it.",
+        "tooltip": "this is alert",
+        "fields": [
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Option",
+                "place_holder": "Option",
+                "selected": "accept",
+                "required": true,
+                "values": [
+                    {
+                        "option": "accept",
+                        "fields": []
+                    },
+                    {
+                        "option": "decline",
+                        "fields": []
+                    },
+                    {
+                        "option": "prompt box",
+                        "fields": []
+                    }
+                ]
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Element Name",
+                "place_holder": "Element Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "assert",
+        "description": "Check that a variable is an expected value. The variable's value will be converted to a string for comparison. The test will stop if the assert fails.",
+        "tooltip": "this is assert",
+        "fields": [
+            {
+                "name": "matches",
+                "type": "lookup",
+                "label": "Matches",
+                "place_holder": "Matches",
+                "selected": "matches",
+                "required": true,
+                "values": [
+                    {
+                        "option": "attribute contains",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "attribute_name",
+                                "type": "text",
+                                "label": "Attribute Name",
+                                "place_holder": "Attribute Name",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "attribute does not contain",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "attribute_name",
+                                "type": "text",
+                                "label": "Attribute Name",
+                                "place_holder": "Attribute Name",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "attribute does not exist",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "attribute_name",
+                                "type": "text",
+                                "label": "Attribute Name",
+                                "place_holder": "Attribute Name",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "attribute exists",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "attribute_name",
+                                "type": "text",
+                                "label": "Attribute Name",
+                                "place_holder": "Attribute Name",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "contains",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "does not contain",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "does not exist",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "matches",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "does not match",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "exists",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "file exists",
+                        "fields": [
+                            {
+                                "name": "file_name",
+                                "type": "text",
+                                "label": "File Name",
+                                "place_holder": "File name with extension",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "child count",
+                        "fields": [
+                            {
+                                "name": "operation_id",
+                                "type": "lookup",
+                                "label": "Condition",
+                                "place_holder": "Condition",
+                                "selected": "less than",
+                                "required": true,
+                                "values": [
+                                    {
+                                        "option": "less than",
+                                        "fields": []
+                                    },
+                                    {
+                                        "option": "greater than",
+                                        "fields": []
+                                    },
+                                    {
+                                        "option": "less than or equal to",
+                                        "fields": []
+                                    },
+                                    {
+                                        "option": "greater than or equal to",
+                                        "fields": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "count",
+                                "type": "number",
+                                "label": "Count",
+                                "place_holder": "Count Value",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "regex",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Pattern",
+                                "place_holder": "Pattern",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "is_custom_error",
+                "type": "checkbox",
+                "label": "Custom Error ?",
+                "place_holder": "",
+                "value": false,
+                "required": false
+            },
+            {
+                "name": "error_message_path",
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "Css Selector / Error Message Textbox",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "click",
+        "description": "Clicks on a target element (e.g., a link, button, checkbox, or radio button).",
+        "tooltip": "this is click",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "force_click",
+                "type": "checkbox",
+                "label": "Force Invisible Element",
+                "place_holder": "",
+                "value": false,
+                "required": false
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "mouse down",
+        "description": "Simulates a user pressing the left mouse button (without releasing it yet).",
+        "tooltip": "this is mouse down",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "mouse up",
+        "description": "Simulates the event that occurs when the user releases the mouse button (e.g., stops holding the button down).",
+        "tooltip": "this is mouse up",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "custom select",
+        "description": "Custom select on a target element",
+        "tooltip": "this is custom select",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "value",
+                "type": "text",
+                "label": "Value",
+                "place_holder": "Value",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "checkbox",
+        "description": "Check a toggle-button (checkbox/radio).",
+        "tooltip": "this is checkbox",
+        "fields": [
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Status",
+                "place_holder": "Status",
+                "selected": "checked",
+                "required": true,
+                "values": [
+                    {
+                        "option": "checked",
+                        "fields": []
+                    },
+                    {
+                        "option": "unchecked",
+                        "fields": []
+                    }
+                ]
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "click by text",
+        "description": "--",
+        "tooltip": "this is click by text",
+        "fields": [
+            {
+                "name": "element_name",
+                "type": "text",
+                "label": "Element text",
+                "place_holder": "Element text",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "iframe_selector",
+                "type": "text",
+                "label": "Iframe Selector",
+                "place_holder": "Iframe Selector",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "close window",
+        "description": "--",
+        "tooltip": "this is close window",
+        "fields": [
+            {
+                "name": "index",
+                "type": "text",
+                "label": "Index",
+                "place_holder": "Index",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "store variable",
+        "description": "Gets the value of element and stores it for later use. This works for any input type element.",
+        "tooltip": "this is store variable",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Status",
+                "place_holder": "Status",
+                "selected": "from element",
+                "required": true,
+                "values": [
+                    {
+                        "option": "from element",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "from javascript",
+                        "fields": [
+                            {
+                                "name": "function",
+                                "type": "textarea",
+                                "label": "Function",
+                                "place_holder": "Function",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "iframe_selector",
+                "type": "text",
+                "label": "Iframe Selector",
+                "place_holder": "Iframe Selector",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "regex",
+                "type": "text",
+                "label": "Regex To Extract (Leave blank if not needed)",
+                "place_holder": "Regex To Extract (Leave blank if not needed)",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "store variable v2",
+        "description": "Gets the value of element and stores it for later use. This works for any input type element.",
+        "tooltip": "this is store variable",
+        "fields": [
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Status",
+                "place_holder": "Status",
+                "selected": "from element",
+                "required": true,
+                "values": [
+                    {
+                        "option": "from element",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "from javascript",
+                        "fields": [
+                            {
+                                "name": "function",
+                                "type": "textarea",
+                                "label": "Function",
+                                "place_holder": "Function",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "iframe_selector",
+                "type": "text",
+                "label": "Iframe Selector",
+                "place_holder": "Iframe Selector",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "regex",
+                "type": "text",
+                "label": "Regex To Extract (Leave blank if not needed)",
+                "place_holder": "Regex To Extract (Leave blank if not needed)",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "hover",
+        "description": "Simulates a user hovering a mouse over the specified element.",
+        "tooltip": "this is hover",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "mouse out",
+        "description": "Simulates a user moving the mouse pointer away from the specified element.",
+        "tooltip": "this is mouse out",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "goto url",
+        "description": "Opens a URL and waits for the page to load before proceeding. This accepts both relative and absolute URLs.",
+        "tooltip": "this is goto url",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "url",
+                "type": "text",
+                "label": "Url",
+                "place_holder": "Url",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "switch to iframe",
+        "description": "Selects a frame within the current window. You may invoke this command multiple times to select a nested frame. NOTE: To select the parent frame, use (relative=parent) as a locator. To select the top frame, use (relative=top). You can also select a frame by its 0-based index number (e.g., select the first frame with (index=0), or the third frame with (index=2)).",
+        "tooltip": "this is iframe",
+        "fields": [
+            {
+                "name": "index",
+                "type": "text",
+                "label": "Index",
+                "place_holder": "Index",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "switch to window",
+        "description": "Selects a popup window using a window locator. Once a popup window has been selected, all commands will go to that window. Window locators use handles to select windows.",
+        "tooltip": "this is switch to window",
+        "fields": [
+            {
+                "name": "index",
+                "type": "text",
+                "label": "Handle",
+                "place_holder": "Handle",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "store window handle",
+        "description": "",
+        "tooltip": "this is store window handle",
+        "fields": [
+            {
+                "name": "index",
+                "type": "text",
+                "label": "Enter Index",
+                "place_holder": "Enter Index",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Enter Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "label": "Description",
+                "place_holder": "Enter Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "script",
+        "description": "Creates a new script tag in the body of the current test window, and adds the specified text into the body of the command. Beware that JS exceptions thrown in these script tags aren't managed by Selenium, so you should probably wrap your script in try/catch blocks if there is any chance that the script will throw an exception.",
+        "tooltip": "this is script",
+        "fields": [
+            {
+                "name": "function",
+                "type": "textarea",
+                "label": "Function",
+                "place_holder": "Function",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "iframe_selector",
+                "type": "text",
+                "label": "Iframe Selector",
+                "place_holder": "Iframe Selector",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "type",
+        "description": "Sets the value of an input field, as though you typed it in. Can also be used to set the value of combo boxes, check boxes, etc. In these cases, value should be the value of the option selected, not the visible text. Chrome only: If a file path is given it will be uploaded to the input (for type=file), NOTE: XPath locators are not supported.",
+        "tooltip": "this is type",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Value",
+                "value": "",
+                "required": false,
+                "is_unique": false
+            },
+            {
+                "name": "field_name",
+                "type": "text",
+                "label": "Label Name",
+                "place_holder": "Label Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "type OTP",
+        "description": "Type OTP code in OTP input field",
+        "tooltip": "Type OTP code in OTP input field",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Value",
+                "value": "",
+                "required": false,
+                "is_unique": false
+            },
+            {
+                "name": "field_name",
+                "type": "text",
+                "label": "Label Name",
+                "place_holder": "Label Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "double click",
+        "description": "Double clicks on an element (e.g., a link, button, checkbox, or radio button).",
+        "tooltip": "this is double click",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "select",
+        "description": "Select an element from a drop-down menu using an option locator. Option locators provide different ways of specifying a select element (e.g., label=, value=, id=, index=). If no option locator prefix is provided, a match on the label will be attempted.",
+        "tooltip": "this is select",
+        "fields": [
+            {
+                "name": "value",
+                "type": "text",
+                "label": "Value",
+                "place_holder": "Value",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "field_name",
+                "type": "text",
+                "label": "Field Name",
+                "place_holder": "Field Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "keypress",
+        "description": "--",
+        "tooltip": "this is keypress",
+        "fields": [
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Option",
+                "place_holder": "Option",
+                "selected": "backspace",
+                "required": true,
+                "values": [
+                    {
+                        "option": "backspace",
+                        "fields": []
+                    },
+                    {
+                        "option": "down",
+                        "fields": []
+                    },
+                    {
+                        "option": "enter",
+                        "fields": []
+                    },
+                    {
+                        "option": "escape",
+                        "fields": []
+                    },
+                    {
+                        "option": "left",
+                        "fields": []
+                    },
+                    {
+                        "option": "page down",
+                        "fields": []
+                    },
+                    {
+                        "option": "page up",
+                        "fields": []
+                    },
+                    {
+                        "option": "right",
+                        "fields": []
+                    },
+                    {
+                        "option": "tab",
+                        "fields": []
+                    },
+                    {
+                        "option": "up",
+                        "fields": []
+                    },
+                    {
+                        "option": "shift+w",
+                        "fields": []
+                    },
+                    {
+                        "option": "ctrl+a",
+                        "fields": []
+                    },
+                    {
+                        "option": "F5(reload)",
+                        "fields": []
+                    }
+                ]
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Element Name",
+                "place_holder": "Element Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "pause",
+        "description": "--",
+        "tooltip": "this is pause",
+        "fields": [
+            {
+                "name": "option",
+                "type": "lookup",
+                "label": "Option",
+                "place_holder": "Option",
+                "selected": "for fixed duration",
+                "required": true,
+                "values": [
+                    {
+                        "option": "for fixed duration",
+                        "fields": [
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "place_holder": "Value",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "until script returns true",
+                        "fields": [
+                            {
+                                "name": "script",
+                                "type": "textarea",
+                                "label": "Script",
+                                "place_holder": "Script",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "iframe_selector",
+                                "type": "text",
+                                "label": "Iframe Selector",
+                                "place_holder": "Iframe Selector",
+                                "value": "",
+                                "required": false
+                            }
+                        ]
+                    },
+                    {
+                        "option": "till element visible",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "option": "till element not visible",
+                        "fields": [
+                            {
+                                "name": "css_path",
+                                "targets": [],
+                                "type": "text",
+                                "label": "CSS Path",
+                                "place_holder": "CSS Path",
+                                "value": "",
+                                "required": true
+                            },
+                            {
+                                "name": "attribute_name",
+                                "type": "text",
+                                "label": "Attribute Name",
+                                "place_holder": "Attribute Name",
+                                "value": "",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "password",
+        "tooltip": " password",
+        "description": "Sets the value of an input password field, as though you typed it in. Can also be used to set the value of combo boxes, check boxes, etc.",
+        "fields": [
+            {
+                "name": "name",
+                "type": "password",
+                "label": "Password",
+                "place_holder": "Password",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "field_name",
+                "type": "text",
+                "label": "Label Name",
+                "place_holder": "Label Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "execute test",
+        "description": "--",
+        "tooltip": "this is execute test",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "test_case",
+                "test_case": "",
+                "value": "",
+                "type": "ajax",
+                "api_url": "test/search",
+                "label": "Search Test Case",
+                "place_holder": "Search Test Case",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "execute api",
+        "description": "--",
+        "tooltip": "this is execute api",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "test_case",
+                "test_case": "",
+                "value": "",
+                "type": "ajax",
+                "api_url": "api/search",
+                "label": "Search Api Suite",
+                "place_holder": "Search Api Suite",
+                "required": true
+            },
+            {
+                "name": "enable_populate",
+                "type": "checkbox",
+                "label": "Populate Api Value",
+                "value": false,
+                "required": false
+            },
+            {
+                "name": "validation_value",
+                "type": "text",
+                "label": "Value",
+                "place_holder": "Value",
+                "value": "",
+                "required": false,
+                "is_unique": false
+            },
+            {
+                "name": "validation_css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "if",
+        "description": "Create a conditional branch in your test. Terminate the branch with the end command.",
+        "tooltip": "this is if",
+        "label": "Condition Start",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "operation_id",
+                "type": "lookup",
+                "label": "Condition",
+                "place_holder": "Condition",
+                "selected": "matches",
+                "required": true,
+                "values": [
+                    {
+                        "option": "matches",
+                        "fields": []
+                    },
+                    {
+                        "option": "contains",
+                        "fields": []
+                    },
+                    {
+                        "option": "does not contain",
+                        "fields": []
+                    },
+                    {
+                        "option": "greater than",
+                        "fields": []
+                    },
+                    {
+                        "option": "less than or equal to",
+                        "fields": []
+                    },
+                    {
+                        "option": "greater than or equal to",
+                        "fields": []
+                    }
+                ]
+            },
+            {
+                "name": "use_in_data_driven",
+                "type": "checkbox",
+                "label": "Use In DataDriven ?",
+                "place_holder": "",
+                "value": false,
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "else",
+        "description": "Part of an if block. Execute the commands in this branch when an if and/or else if condition are not met. Terminate the branch with the end command.",
+        "tooltip": "this is else",
+        "label": "ELSE (Else Condition)",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "condition_end",
+        "tooltip": "this is condition_end",
+        "label": "Condition End",
+        "description": "--",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "file",
+        "description": "Upload a file",
+        "tooltip": "this is file upload command",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Step Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "file",
+                "type": "file",
+                "label": "File",
+                "place_holder": "File",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "r23",
+        "description": "Multiform Type Command",
+        "tooltip": "This is Multiform Type",
+        "fields": [
+            {
+                "name": "field_name",
+                "type": "text",
+                "label": "Label Name",
+                "place_holder": "Label Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Name",
+                "place_holder": "Value",
+                "value": "",
+                "required": false,
+                "is_unique": false
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "primary_trigger_path",
+                "targets": [],
+                "type": "text",
+                "label": "Primary Trigger Path",
+                "place_holder": "Primary Trigger Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "secondary_trigger_path",
+                "targets": [],
+                "type": "text",
+                "label": "Secondary Trigger Path",
+                "place_holder": "Secondary Trigger Path",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "Description",
+                "value": "",
+                "required": false
+            }
+        ]
+    },
+    {
+        "name": "qr code",
+        "description": "",
+        "tooltip": "This is QR CODE",
+        "fields": [
+            {
+                "name": "name",
+                "type": "text",
+                "label": "Element Name",
+                "place_holder": "Element Name",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "description",
+                "type": "textarea",
+                "label": "Description",
+                "place_holder": "description",
+                "value": "",
+                "required": false
+            },
+            {
+                "name": "css_path",
+                "targets": [],
+                "type": "text",
+                "label": "CSS Path",
+                "place_holder": "CSS Path",
+                "value": "",
+                "required": true
+            },
+            {
+                "name": "api_selector",
+                "type": "api",
+                "label": "API",
+                "place_holder": "API",
+                "api_suite": "",
+                "api_id": "",
+                "required": false
+            },
+            {
+                "name": "api_request_selector",
+                "type": "api_request",
+                "label": "API REQUEST",
+                "place_holder": "API Request",
+                "api_identifier": "",
+                "api_req_id": "",
+                "params": [],
+                "required": true
+            }
+        ]
+    }
+    
+]
