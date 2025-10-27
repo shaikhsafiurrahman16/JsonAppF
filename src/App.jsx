@@ -1,26 +1,3 @@
-// import { useState } from "react";
-// import AppContent from "./AppContent";
-// import AppHeader from "./AppHeader";
-// import "../src/My.css"
-
-// function App() {
-//   const [dataUpdated, setDataUpdated] = useState(false);
-
-//   const handleDataAdded = () => {
-//     setDataUpdated((prev) => !prev);
-//   };
-
-//   return (
-//     <>
-//       <AppHeader onDataAdded={handleDataAdded} />
-//       <AppContent refreshTrigger={dataUpdated} />
-//     </>
-//   );
-// } 
-
-// export default App;
-
-
 import AppContent from "./AppContent";
 import AppHeader from "./AppHeader";
 import "../src/My.css";
