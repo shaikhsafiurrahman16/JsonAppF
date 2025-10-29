@@ -15,10 +15,8 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
   const [selectedCommand, setSelectedCommand] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
-  // ✅ Universal data builder
   const buildCommandData = (commandName, formData) => {
     const { matches, matchesFields, option, advance, ...rest } = formData;
-
     let nestedField = {};
 
     if (matches && matchesFields && Object.keys(matchesFields).length > 0) {
@@ -28,7 +26,6 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     }
 
     const finalFields = { ...nestedField, ...rest };
-
     return {
       [commandName]: {
         fields: finalFields,
@@ -37,25 +34,18 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     };
   };
 
-  // ✅ FIXED useEffect for editing
   useEffect(() => {
     if (editItem) {
       setEditMode(true);
       setModalOpen(true);
 
-      // 🔹 Detect command key dynamically (like "assert", "store variable", etc.)
       const commandKey = Object.keys(editItem).find((key) => key !== "_id");
-
       if (!commandKey) return;
 
-      const commandIndex = Commands.findIndex(
-        (cmd) => cmd.name === commandKey
-      );
-
+      const commandIndex = Commands.findIndex((cmd) => cmd.name === commandKey);
       if (commandIndex === -1) return;
 
       setSelectedCommand(commandIndex);
-
       const fields = Commands[commandIndex].fields;
       setSelectedFields(fields);
 
@@ -89,35 +79,24 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     const obj = Object.fromEntries(fields.map((item) => [item.name, ""]));
     setFormData(obj);
     setSelectedLookupOptions({});
+    if (!editMode) setEditItem(null);
   };
 
   const InputChange = (name, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleLookupChange = (fieldName, value, nestedFields = null) => {
-    setSelectedLookupOptions((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
+    setSelectedLookupOptions((prev) => ({ ...prev, [fieldName]: value }));
     setFormData((prev) => {
       if (nestedFields) {
-        return {
-          ...prev,
-          matchesFields: nestedFields,
-        };
+        return { ...prev, matchesFields: nestedFields };
       }
-      return {
-        ...prev,
-        [fieldName]: value,
-      };
+      return { ...prev, [fieldName]: value };
     });
   };
 
-  const NestedFields = (field, parentFieldName = null) => {
+  const NestedFields = (field) => {
     const selectedOption = field.values?.find(
       (v) => v.option === selectedLookupOptions[field.name]
     );
@@ -178,8 +157,8 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     return null;
   };
 
-  const renderFields = (fields) => {
-    return fields.map((field, index) => {
+  const renderFields = (fields) =>
+    fields.map((field, index) => {
       let inputElement;
 
       if (field.type === "lookup") {
@@ -195,7 +174,7 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
                 label: optionObj.option,
               }))}
             />
-            {NestedFields(field, "fields")}
+            {NestedFields(field)}
           </>
         );
       } else if (field.type === "textarea") {
@@ -233,7 +212,6 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
         </div>
       );
     });
-  };
 
   const handleFormNull = () => {
     setModalOpen(false);
@@ -248,27 +226,14 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
   const handleAddOrUpdate = async () => {
     try {
       if (selectedCommand === null) {
-        message.error("Please select a command before submitting!");
-        return;
-      }
-
-      const requiredFields = selectedFields.map((f) => f.name);
-      const emptyFields = requiredFields.filter(
-        (name) =>
-          formData[name] === "" ||
-          formData[name] === undefined ||
-          formData[name] === null
-      );
-
-      if (emptyFields.length > 0) {
-        message.error("Please fill all required fields!");
+        message.error("Please select a command before submitting");
         return;
       }
 
       const commandName = Commands[selectedCommand].name;
       const dataToSend = buildCommandData(commandName, formData);
 
-      if (editMode && editItem) {
+      if (editMode && editItem?._id) {
         await axios.put(
           `http://localhost:3000/api/info/update/${editItem._id}`,
           dataToSend
@@ -276,13 +241,13 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
         message.success("Data updated successfully!");
       } else {
         await axios.post("http://localhost:3000/api/info/add", dataToSend);
-        message.success("Data inserted successfully!");
+        message.success("Data added successfully");
       }
 
       onDataAdded();
       handleFormNull();
     } catch (err) {
-      console.error("Error inserting/updating data:", err);
+      console.error("Error adding/updating data:", err);
       message.error("Server error!");
     }
   };
@@ -296,7 +261,6 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
           alignItems: "center",
           background: "#7b747469",
           padding: "0 20px",
-          color: "white",
         }}
       >
         <div

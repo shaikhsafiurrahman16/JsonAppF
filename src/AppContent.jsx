@@ -13,9 +13,10 @@ function AppContent({ refreshTrigger, setEditItem }) {
   const fetchData = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/info/all");
-      setData(res.data.data);
+      setData(res.data.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
+      message.error("Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -25,42 +26,46 @@ function AppContent({ refreshTrigger, setEditItem }) {
     fetchData();
   }, [refreshTrigger]);
 
-  const handleView = (item) => {
-    setSelectedItem(item);
-    setModalOpen(true);
-  };
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/info/delete/${id}`);
       message.success("Deleted successfully!");
       fetchData();
     } catch (error) {
-      console.error("Error deleting item:", error);
       message.error("Failed to delete item!");
     }
   };
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const newData = Array.from(data);
-    const [movedItem] = newData.splice(result.source.index, 1);
-    newData.splice(result.destination.index, 0, movedItem);
-    setData(newData);
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <DragDropContext onDragEnd={handleDragEnd}>
+    <div style={{ padding: 20 }}>
+      <DragDropContext
+        onDragEnd={async (r) => {
+          if (!r.destination) return;
+          const items = Array.from(data);
+          const [moved] = items.splice(r.source.index, 1);
+          items.splice(r.destination.index, 0, moved);
+          setData(items);
+          try {
+            await axios.put("http://localhost:3000/api/info/reorder", {
+              orderedIds: items.map((i) => i._id),
+            });
+          } catch {
+            message.error("Order update failed");
+          }
+        }}
+      >
         <Droppable droppableId="infoList">
           {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div ref={provided.innerRef} {...provided.droppableProps}>
               <List
                 loading={loading}
                 dataSource={data}
-                renderItem={(item, index) => (
-                  console.log(item),
-                  (
+                renderItem={(item, index) => {
+                  const commandName =
+                    Object.keys(item).find((key) => key !== "_id") ||
+                    "Unknown Command";
+
+                  return (
                     <Draggable
                       key={item._id}
                       draggableId={item._id}
@@ -75,11 +80,11 @@ function AppContent({ refreshTrigger, setEditItem }) {
                             background: snapshot.isDragging
                               ? "#f0f9ff"
                               : "#fff",
-                            marginBottom: "8px",
-                            borderRadius: "6px",
+                            marginBottom: 8,
+                            borderRadius: 6,
                             border: "1px solid #ddd",
                             boxShadow: snapshot.isDragging
-                              ? "0 0 10px rgba(24,144,255,0.3)"
+                              ? "0 0 8px rgba(24,144,255,0.3)"
                               : "none",
                             transition: "all 0.2s ease",
                             padding: "10px 15px",
@@ -90,56 +95,41 @@ function AppContent({ refreshTrigger, setEditItem }) {
                             actions={[
                               <Tooltip title="View" key="view">
                                 <EyeOutlined
-                                  onClick={() => handleView(item)}
-                                  style={{
-                                    color: "#1890ff",
-                                    fontSize: "18px",
-                                    cursor: "pointer",
+                                  style={{ color: "#1890ff", fontSize: 18 }}
+                                  onClick={() => {
+                                    setSelectedItem(item);
+                                    setModalOpen(true);
                                   }}
                                 />
                               </Tooltip>,
                               <Tooltip title="Edit" key="edit">
                                 <EditOutlined
-                                  style={{
-                                    color: "#52c41a",
-                                    fontSize: "18px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => {
-                                    setEditItem(item);
-                                  }}
+                                  style={{ color: "#52c41a", fontSize: 18 }}
+                                  onClick={() => setEditItem(item)}
                                 />
                               </Tooltip>,
-
                               <Popconfirm
                                 key="delete"
-                                title="Are you sure you want to delete this item?"
+                                title="Delete this item?"
                                 okText="Yes"
                                 cancelText="No"
                                 onConfirm={() => handleDelete(item._id)}
                               >
                                 <Tooltip title="Delete">
                                   <DeleteOutlined
-                                    style={{
-                                      color: "red",
-                                      fontSize: "18px",
-                                      cursor: "pointer",
-                                    }}
+                                    style={{ color: "red", fontSize: 18 }}
                                   />
                                 </Tooltip>
                               </Popconfirm>,
                             ]}
                           >
-                            <strong>
-                              {Object.keys(item).find((key) => key !== "_id") ||
-                                "Unknown Command"}
-                            </strong>
+                            <strong>{commandName}</strong>
                           </List.Item>
                         </div>
                       )}
                     </Draggable>
-                  )
-                )}
+                  );
+                }}
               />
               {provided.placeholder}
             </div>
@@ -151,19 +141,15 @@ function AppContent({ refreshTrigger, setEditItem }) {
         title="Alert Details"
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
-        footer={[
-          <Button key="close" onClick={() => setModalOpen(false)}>
-            Close
-          </Button>,
-        ]}
+        footer={<Button onClick={() => setModalOpen(false)}>Close</Button>}
       >
         {selectedItem ? (
           <pre
             style={{
               background: "#f5f5f5",
-              padding: "10px",
-              borderRadius: "6px",
-              maxHeight: "400px",
+              padding: 10,
+              borderRadius: 6,
+              maxHeight: 400,
               overflowY: "auto",
             }}
           >
