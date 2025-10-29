@@ -7,21 +7,43 @@ import axios from "axios";
 
 const { Header } = Layout;
 
-function AppHeader({ onDataAdded, editItem, setEditItem }) {
+function AppHeader({
+  onDataAdded,
+  editItem,
+  setEditItem,
+  setModalOpenExternal,
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedFields, setSelectedFields] = useState([]);
   const [formData, setFormData] = useState({});
   const [selectedLookupOptions, setSelectedLookupOptions] = useState({});
   const [selectedCommand, setSelectedCommand] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [insertAfterIndex, setInsertAfterIndex] = useState(null);
 
+  // External open modal for row insert
+  useEffect(() => {
+    if (setModalOpenExternal) {
+      setModalOpenExternal(() => (index = null) => {
+        setInsertAfterIndex(index); // clicked row index
+        setEditMode(false);
+        setModalOpen(true);
+      });
+    }
+  }, [setModalOpenExternal]);
+
+  // Build data object for API
   const buildCommandData = (commandName, formData) => {
     const { matches, matchesFields, option, advance, ...rest } = formData;
     let nestedField = {};
 
     if (matches && matchesFields && Object.keys(matchesFields).length > 0) {
       nestedField = { [matches]: { ...matchesFields } };
-    } else if (option && matchesFields && Object.keys(matchesFields).length > 0) {
+    } else if (
+      option &&
+      matchesFields &&
+      Object.keys(matchesFields).length > 0
+    ) {
       nestedField = { [option]: { ...matchesFields } };
     }
 
@@ -34,64 +56,66 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     };
   };
 
+  // Pre-fill data for edit
   useEffect(() => {
-    if (editItem) {
-      setEditMode(true);
-      setModalOpen(true);
+    if (!editItem) return;
 
-      const commandKey = Object.keys(editItem).find((key) => key !== "_id");
-      if (!commandKey) return;
+    setEditMode(true);
+    setModalOpen(true);
 
-      const commandIndex = Commands.findIndex((cmd) => cmd.name === commandKey);
-      if (commandIndex === -1) return;
+    const commandKey = Object.keys(editItem).find((key) => key !== "_id");
+    if (!commandKey) return;
 
-      setSelectedCommand(commandIndex);
-      const fields = Commands[commandIndex].fields;
-      setSelectedFields(fields);
+    const commandIndex = Commands.findIndex((cmd) => cmd.name === commandKey);
+    if (commandIndex === -1) return;
 
-      const data = editItem[commandKey]?.fields || {};
-      const filledData = {};
+    setSelectedCommand(commandIndex);
+    setSelectedFields(Commands[commandIndex].fields);
 
-      fields.forEach((f) => {
-        if (f.name === "matches") {
-          const matchKey = Object.keys(data).find((k) => typeof data[k] === "object");
-          filledData.matches = matchKey || "";
-          filledData.matchesFields = matchKey ? data[matchKey] : {};
-          setSelectedLookupOptions({ matches: matchKey || "" });
-        } else if (f.name === "option") {
-          const optKey = Object.keys(data).find((k) => typeof data[k] === "object");
-          filledData.option = optKey || "";
-          filledData.matchesFields = optKey ? data[optKey] : {};
-          setSelectedLookupOptions({ option: optKey || "" });
-        } else {
-          filledData[f.name] = data[f.name] || "";
-        }
-      });
+    const data = editItem[commandKey]?.fields || {};
+    const filledData = {};
 
-      setFormData(filledData);
-    }
+    Commands[commandIndex].fields.forEach((f) => {
+      if (f.name === "matches") {
+        const matchKey = Object.keys(data).find(
+          (k) => typeof data[k] === "object"
+        );
+        filledData.matches = matchKey || "";
+        filledData.matchesFields = matchKey ? data[matchKey] : {};
+        setSelectedLookupOptions({ matches: matchKey || "" });
+      } else if (f.name === "option") {
+        const optKey = Object.keys(data).find(
+          (k) => typeof data[k] === "object"
+        );
+        filledData.option = optKey || "";
+        filledData.matchesFields = optKey ? data[optKey] : {};
+        setSelectedLookupOptions({ option: optKey || "" });
+      } else {
+        filledData[f.name] = data[f.name] || "";
+      }
+    });
+
+    setFormData(filledData);
   }, [editItem]);
 
   const handleChange = (index) => {
     setSelectedCommand(index);
+    console.log(setSelectedCommand(index))
     const fields = Commands[index].fields;
     setSelectedFields(fields);
-    const obj = Object.fromEntries(fields.map((item) => [item.name, ""]));
-    setFormData(obj);
+    setFormData(Object.fromEntries(fields.map((f) => [f.name, ""])));
     setSelectedLookupOptions({});
     if (!editMode) setEditItem(null);
   };
 
   const InputChange = (name, value) => {
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleLookupChange = (fieldName, value, nestedFields = null) => {
     setSelectedLookupOptions((prev) => ({ ...prev, [fieldName]: value }));
     setFormData((prev) => {
-      if (nestedFields) {
-        return { ...prev, matchesFields: nestedFields };
-      }
+      if (nestedFields) return { ...prev, matchesFields: nestedFields };
       return { ...prev, [fieldName]: value };
     });
   };
@@ -101,60 +125,59 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
       (v) => v.option === selectedLookupOptions[field.name]
     );
 
-    if (selectedOption?.fields?.length > 0) {
-      return (
-        <div style={{ marginLeft: 30, marginTop: 15 }}>
-          {selectedOption.fields.map((nestedField) => {
-            const handleNestedChange = (value) => {
-              setFormData((prev) => ({
-                ...prev,
-                matchesFields: {
-                  ...prev.matchesFields,
-                  [nestedField.name]: value,
-                },
-              }));
-            };
+    if (!selectedOption?.fields?.length) return null;
 
-            let inputElement;
-            if (nestedField.type === "textarea") {
-              inputElement = (
-                <Input.TextArea
-                  value={formData.matchesFields?.[nestedField.name] || ""}
-                  onChange={(e) => handleNestedChange(e.target.value)}
-                  placeholder={nestedField.place_holder}
-                />
-              );
-            } else if (nestedField.type === "checkbox") {
-              inputElement = (
-                <input
-                  type="checkbox"
-                  checked={formData.matchesFields?.[nestedField.name] || false}
-                  onChange={(e) => handleNestedChange(e.target.checked)}
-                />
-              );
-            } else {
-              inputElement = (
-                <Input
-                  placeholder={nestedField.place_holder}
-                  value={formData.matchesFields?.[nestedField.name] || ""}
-                  onChange={(e) => handleNestedChange(e.target.value)}
-                />
-              );
-            }
+    return (
+      <div style={{ marginLeft: 30, marginTop: 15 }}>
+        {selectedOption.fields.map((nestedField) => {
+          const handleNestedChange = (value) => {
+            setFormData((prev) => ({
+              ...prev,
+              matchesFields: {
+                ...prev.matchesFields,
+                [nestedField.name]: value,
+              },
+            }));
+          };
 
-            return (
-              <div key={nestedField.name} style={{ marginBottom: 20 }}>
-                <label style={{ display: "flex", marginBottom: 5 }}>
-                  {nestedField.label}
-                </label>
-                {inputElement}
-              </div>
+          let inputElement;
+          if (nestedField.type === "textarea") {
+            inputElement = (
+              <Input.TextArea
+                value={formData.matchesFields?.[nestedField.name] || ""}
+                onChange={(e) => handleNestedChange(e.target.value)}
+                placeholder={nestedField.place_holder}
+              />
             );
-          })}
-        </div>
-      );
-    }
-    return null;
+          } else if (nestedField.type === "checkbox") {
+            inputElement = (
+              <input
+                type="checkbox"
+                checked={formData.matchesFields?.[nestedField.name] || false}
+                onChange={(e) => handleNestedChange(e.target.checked)}
+              />
+            );
+          } else {
+            inputElement = (
+              <Input
+                placeholder={nestedField.place_holder}
+                value={formData.matchesFields?.[nestedField.name] || ""}
+                onChange={(e) => handleNestedChange(e.target.value)}
+              />
+            );
+          }
+
+          return (
+            <div key={nestedField.name} style={{ marginBottom: 20 }}>
+              <label style={{ display: "flex", marginBottom: 5 }}>
+                {nestedField.label}
+              </label>
+              {inputElement}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   const renderFields = (fields) =>
@@ -169,9 +192,9 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
               style={{ width: "50%" }}
               value={formData[field.name]}
               onChange={(value) => handleLookupChange(field.name, value)}
-              options={field.values.map((optionObj) => ({
-                value: optionObj.option,
-                label: optionObj.option,
+              options={field.values.map((opt) => ({
+                value: opt.option,
+                label: opt.option,
               }))}
             />
             {NestedFields(field)}
@@ -221,6 +244,7 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
     setSelectedCommand(null);
     setEditMode(false);
     setEditItem(null);
+    setInsertAfterIndex(null);
   };
 
   const handleAddOrUpdate = async () => {
@@ -244,10 +268,13 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
         message.success("Data added successfully");
       }
 
-      onDataAdded();
+      if (typeof window.addRowBelow === "function") {
+        window.addRowBelow(insertAfterIndex);
+      }
+      onDataAdded(insertAfterIndex);
       handleFormNull();
     } catch (err) {
-      console.error("Error adding/updating data:", err);
+      console.error(err);
       message.error("Server error!");
     }
   };
@@ -285,6 +312,7 @@ function AppHeader({ onDataAdded, editItem, setEditItem }) {
           }}
           onClick={() => {
             setEditMode(false);
+            setInsertAfterIndex(null); // add at end
             setModalOpen(true);
           }}
         />

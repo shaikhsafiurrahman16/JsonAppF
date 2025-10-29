@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { List, Modal, Button, Tooltip, Popconfirm, message } from "antd";
-import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { List, Tooltip, Popconfirm, message, Modal, Button } from "antd";
+import {
+  EyeOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
-function AppContent({ refreshTrigger, setEditItem }) {
+function AppContent({ refreshTrigger, setEditItem, openAddModal }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
 
+  // Fetch data
   const fetchData = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/info/all");
@@ -31,19 +37,48 @@ function AppContent({ refreshTrigger, setEditItem }) {
       await axios.delete(`http://localhost:3000/api/info/delete/${id}`);
       message.success("Deleted successfully!");
       fetchData();
-    } catch (error) {
+    } catch {
       message.error("Failed to delete item!");
     }
+  };
+
+  // 🔹 Function to visually add a temporary new row below clicked item
+  const handleAddNewRow = (insertAfterIndex) => {
+    const newItem = {
+      _id: `temp-${Date.now()}`,
+      temp: true,
+      NewRow: { fields: {} },
+    };
+
+    const updatedData =
+      insertAfterIndex === null || insertAfterIndex >= data.length - 1
+        ? [...data, newItem]
+        : [
+            ...data.slice(0, insertAfterIndex + 1),
+            newItem,
+            ...data.slice(insertAfterIndex + 1),
+          ];
+
+    setData(updatedData);
+  };
+
+  // 🔹 Expose this function globally so AppHeader can call it
+  useEffect(() => {
+    window.addRowBelow = handleAddNewRow;
+  }, [data]);
+
+  const handleAddBelow = (index) => {
+    if (openAddModal) openAddModal(index);
   };
 
   return (
     <div style={{ padding: 20 }}>
       <DragDropContext
-        onDragEnd={async (r) => {
-          if (!r.destination) return;
+        onDragEnd={async (result) => {
+          if (!result.destination) return;
           const items = Array.from(data);
-          const [moved] = items.splice(r.source.index, 1);
-          items.splice(r.destination.index, 0, moved);
+          const [moved] = items.splice(result.source.index, 1);
+          items.splice(result.destination.index, 0, moved);
           setData(items);
           try {
             await axios.put("http://localhost:3000/api/info/reorder", {
@@ -98,7 +133,7 @@ function AppContent({ refreshTrigger, setEditItem }) {
                                   style={{ color: "#1890ff", fontSize: 18 }}
                                   onClick={() => {
                                     setSelectedItem(item);
-                                    setModalOpen(true);
+                                    setViewModalOpen(true);
                                   }}
                                 />
                               </Tooltip>,
@@ -106,6 +141,15 @@ function AppContent({ refreshTrigger, setEditItem }) {
                                 <EditOutlined
                                   style={{ color: "#52c41a", fontSize: 18 }}
                                   onClick={() => setEditItem(item)}
+                                />
+                              </Tooltip>,
+                              <Tooltip title="Add New Below" key="add">
+                                <PlusOutlined
+                                  style={{
+                                    color: "#722ed1",
+                                    fontSize: 18,
+                                  }}
+                                  onClick={() => handleAddBelow(index)}
                                 />
                               </Tooltip>,
                               <Popconfirm
@@ -117,13 +161,20 @@ function AppContent({ refreshTrigger, setEditItem }) {
                               >
                                 <Tooltip title="Delete">
                                   <DeleteOutlined
-                                    style={{ color: "red", fontSize: 18 }}
+                                    style={{
+                                      color: "red",
+                                      fontSize: 18,
+                                    }}
                                   />
                                 </Tooltip>
                               </Popconfirm>,
                             ]}
                           >
-                            <strong>{commandName}</strong>
+                            <strong>
+                              {item.temp
+                                ? "New Row (unsaved)"
+                                : commandName}
+                            </strong>
                           </List.Item>
                         </div>
                       )}
@@ -139,9 +190,9 @@ function AppContent({ refreshTrigger, setEditItem }) {
 
       <Modal
         title="Alert Details"
-        open={modalOpen}
-        onCancel={() => setModalOpen(false)}
-        footer={<Button onClick={() => setModalOpen(false)}>Close</Button>}
+        open={viewModalOpen}
+        onCancel={() => setViewModalOpen(false)}
+        footer={<Button onClick={() => setViewModalOpen(false)}>Close</Button>}
       >
         {selectedItem ? (
           <pre
