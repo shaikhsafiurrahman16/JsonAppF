@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Modal, Input, Select, Tooltip, message } from "antd";
 import { PlusOutlined, QuestionOutlined } from "@ant-design/icons";
+import axios from "axios";
 import Commands from "./Commands.json";
 import Advance from "./Advance";
-import axios from "axios";
 
 const { Header } = Layout;
 
@@ -14,265 +14,209 @@ function AppHeader({
   setModalOpenExternal,
 }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedFields, setSelectedFields] = useState([]);
-  const [formData, setFormData] = useState({});
-  const [selectedLookupOptions, setSelectedLookupOptions] = useState({});
   const [selectedCommand, setSelectedCommand] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [lookupOptions, setLookupOptions] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [insertAfterIndex, setInsertAfterIndex] = useState(null);
 
-  // External open modal for row insert
+  const resetForm = () => {
+    setModalOpen(false);
+    setSelectedCommand(null);
+    setFormData({});
+    setLookupOptions({});
+    setEditMode(false);
+    setEditItem(null);
+    setInsertAfterIndex(null);
+  };
+
   useEffect(() => {
     if (setModalOpenExternal) {
       setModalOpenExternal(() => (index = null) => {
-        setInsertAfterIndex(index); // clicked row index
+        setInsertAfterIndex(index);
         setEditMode(false);
         setModalOpen(true);
       });
     }
   }, [setModalOpenExternal]);
 
-  // Build data object for API
-  const buildCommandData = (commandName, formData) => {
-    const { matches, matchesFields, option, advance, ...rest } = formData;
-    let nestedField = {};
+  const buildData = (cmdName, data) => {
+    const { matches, matchesFields, option, advance, ...rest } = data;
+    let nested = {};
 
-    if (matches && matchesFields && Object.keys(matchesFields).length > 0) {
-      nestedField = { [matches]: { ...matchesFields } };
-    } else if (
-      option &&
-      matchesFields &&
-      Object.keys(matchesFields).length > 0
-    ) {
-      nestedField = { [option]: { ...matchesFields } };
-    }
+    if (matches && matchesFields && Object.keys(matchesFields).length)
+      nested = { [matches]: { ...matchesFields } };
+    else if (option && matchesFields && Object.keys(matchesFields).length)
+      nested = { [option]: { ...matchesFields } };
 
-    const finalFields = { ...nestedField, ...rest };
     return {
-      [commandName]: {
-        fields: finalFields,
+      [cmdName]: {
+        fields: { ...nested, ...rest },
         advance: advance || {},
       },
     };
   };
 
-  // Pre-fill data for edit
   useEffect(() => {
     if (!editItem) return;
-
     setEditMode(true);
     setModalOpen(true);
 
-    const commandKey = Object.keys(editItem).find((key) => key !== "_id");
-    if (!commandKey) return;
+    const cmdName = Object.keys(editItem).find((k) => k !== "_id");
+    const cmdIndex = Commands.findIndex((c) => c.name === cmdName);
+    if (cmdIndex === -1) return;
 
-    const commandIndex = Commands.findIndex((cmd) => cmd.name === commandKey);
-    if (commandIndex === -1) return;
+    setSelectedCommand(cmdIndex);
+    const fields = Commands[cmdIndex].fields;
+    const data = editItem[cmdName]?.fields || {};
+    const filled = {};
 
-    setSelectedCommand(commandIndex);
-    setSelectedFields(Commands[commandIndex].fields);
-
-    const data = editItem[commandKey]?.fields || {};
-    const filledData = {};
-
-    Commands[commandIndex].fields.forEach((f) => {
-      if (f.name === "matches") {
-        const matchKey = Object.keys(data).find(
-          (k) => typeof data[k] === "object"
-        );
-        filledData.matches = matchKey || "";
-        filledData.matchesFields = matchKey ? data[matchKey] : {};
-        setSelectedLookupOptions({ matches: matchKey || "" });
-      } else if (f.name === "option") {
-        const optKey = Object.keys(data).find(
-          (k) => typeof data[k] === "object"
-        );
-        filledData.option = optKey || "";
-        filledData.matchesFields = optKey ? data[optKey] : {};
-        setSelectedLookupOptions({ option: optKey || "" });
+    fields.forEach((f) => {
+      const key = Object.keys(data).find((k) => typeof data[k] === "object");
+      if (f.type === "lookup") {
+        filled[f.name] = key || "";
+        filled.matchesFields = key ? data[key] : {};
+        setLookupOptions({ [f.name]: key || "" });
       } else {
-        filledData[f.name] = data[f.name] || "";
+        filled[f.name] = data[f.name] || "";
+      }
+    });
+    setFormData(filled);
+  }, [editItem]);
+
+  const handleCommandSelect = (index) => {
+    setSelectedCommand(index);
+    const fields = Commands[index].fields;
+    const initialData = {};
+    const initialLookup = {};
+
+    fields.forEach((f) => {
+      if (f.type === "lookup") {
+        const defaultSelected = f.selected || "";
+        initialData[f.name] = defaultSelected;
+        initialLookup[f.name] = defaultSelected;
+      } else if (f.type === "checkbox") {
+        initialData[f.name] = f.value || false;
+      } else {
+        initialData[f.name] = f.value || "";
       }
     });
 
-    setFormData(filledData);
-  }, [editItem]);
-
-  const handleChange = (index) => {
-    setSelectedCommand(index);
-    console.log(setSelectedCommand(index))
-    const fields = Commands[index].fields;
-    setSelectedFields(fields);
-    setFormData(Object.fromEntries(fields.map((f) => [f.name, ""])));
-    setSelectedLookupOptions({});
+    setFormData(initialData);
+    setLookupOptions(initialLookup);
     if (!editMode) setEditItem(null);
   };
 
-  const InputChange = (name, value) => {
+  const handleChange = (name, value) =>
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+  const handleLookup = (field, value, nested = null) => {
+    setLookupOptions((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(nested && { matchesFields: nested }),
+    }));
   };
 
-  const handleLookupChange = (fieldName, value, nestedFields = null) => {
-    setSelectedLookupOptions((prev) => ({ ...prev, [fieldName]: value }));
-    setFormData((prev) => {
-      if (nestedFields) return { ...prev, matchesFields: nestedFields };
-      return { ...prev, [fieldName]: value };
-    });
-  };
-
-  const NestedFields = (field) => {
-    const selectedOption = field.values?.find(
-      (v) => v.option === selectedLookupOptions[field.name]
+  const renderNested = (field) => {
+    const selected = field.values?.find(
+      (v) => v.option === lookupOptions[field.name]
     );
-
-    if (!selectedOption?.fields?.length) return null;
+    if (!selected?.fields?.length) return null;
 
     return (
       <div style={{ marginLeft: 30, marginTop: 15 }}>
-        {selectedOption.fields.map((nestedField) => {
-          const handleNestedChange = (value) => {
-            setFormData((prev) => ({
-              ...prev,
-              matchesFields: {
-                ...prev.matchesFields,
-                [nestedField.name]: value,
-              },
-            }));
-          };
-
-          let inputElement;
-          if (nestedField.type === "textarea") {
-            inputElement = (
-              <Input.TextArea
-                value={formData.matchesFields?.[nestedField.name] || ""}
-                onChange={(e) => handleNestedChange(e.target.value)}
-                placeholder={nestedField.place_holder}
-              />
-            );
-          } else if (nestedField.type === "checkbox") {
-            inputElement = (
-              <input
-                type="checkbox"
-                checked={formData.matchesFields?.[nestedField.name] || false}
-                onChange={(e) => handleNestedChange(e.target.checked)}
-              />
-            );
-          } else {
-            inputElement = (
-              <Input
-                placeholder={nestedField.place_holder}
-                value={formData.matchesFields?.[nestedField.name] || ""}
-                onChange={(e) => handleNestedChange(e.target.value)}
-              />
-            );
-          }
-
-          return (
-            <div key={nestedField.name} style={{ marginBottom: 20 }}>
-              <label style={{ display: "flex", marginBottom: 5 }}>
-                {nestedField.label}
-              </label>
-              {inputElement}
-            </div>
-          );
-        })}
+        {selected.fields.map((nested) => (
+          <div key={nested.name} style={{ marginBottom: 20 }}>
+            <label>{nested.label}</label>
+            <Input
+              placeholder={nested.place_holder}
+              value={formData.matchesFields?.[nested.name] || ""}
+              onChange={(e) =>
+                setFormData((p) => ({
+                  ...p,
+                  matchesFields: {
+                    ...p.matchesFields,
+                    [nested.name]: e.target.value,
+                  },
+                }))
+              }
+            />
+          </div>
+        ))}
       </div>
     );
   };
 
   const renderFields = (fields) =>
-    fields.map((field, index) => {
-      let inputElement;
-
-      if (field.type === "lookup") {
-        inputElement = (
+    fields.map((f, i) => (
+      <div key={i} style={{ marginBottom: 20 }}>
+        <label>{f.label}</label>
+        {f.type === "lookup" ? (
           <>
             <Select
-              placeholder={field.place_holder}
+              showSearch
+              optionFilterProp="label"
+              filterOption={(input, option) =>
+                option?.label?.toLowerCase().includes(input.toLowerCase())
+              }
               style={{ width: "50%" }}
-              value={formData[field.name]}
-              onChange={(value) => handleLookupChange(field.name, value)}
-              options={field.values.map((opt) => ({
+              value={formData[f.name]}
+              placeholder={f.place_holder}
+              onChange={(val) => handleLookup(f.name, val)}
+              options={f.values.map((opt) => ({
                 value: opt.option,
                 label: opt.option,
               }))}
             />
-            {NestedFields(field)}
+            {renderNested(f)}
           </>
-        );
-      } else if (field.type === "textarea") {
-        inputElement = (
+        ) : f.type === "textarea" ? (
           <Input.TextArea
-            value={formData[field.name]}
-            onChange={(e) => InputChange(field.name, e.target.value)}
-            placeholder={field.place_holder}
+            value={formData[f.name]}
+            placeholder={f.place_holder}
+            onChange={(e) => handleChange(f.name, e.target.value)}
           />
-        );
-      } else if (field.type === "checkbox") {
-        inputElement = (
+        ) : f.type === "checkbox" ? (
           <input
             type="checkbox"
-            checked={formData[field.name]}
-            onChange={(e) => InputChange(field.name, e.target.checked)}
+            checked={formData[f.name]}
+            onChange={(e) => handleChange(f.name, e.target.checked)}
           />
-        );
-      } else {
-        inputElement = (
+        ) : (
           <Input
-            placeholder={field.place_holder}
-            value={formData[field.name]}
-            onChange={(e) => InputChange(field.name, e.target.value)}
+            value={formData[f.name]}
+            placeholder={f.place_holder}
+            onChange={(e) => handleChange(f.name, e.target.value)}
           />
-        );
-      }
+        )}
+      </div>
+    ));
 
-      return (
-        <div key={index} style={{ marginBottom: 20 }}>
-          <label style={{ display: "flex", marginBottom: 5 }}>
-            {field.label}
-          </label>
-          {inputElement}
-        </div>
-      );
-    });
-
-  const handleFormNull = () => {
-    setModalOpen(false);
-    setSelectedFields([]);
-    setFormData({});
-    setSelectedLookupOptions({});
-    setSelectedCommand(null);
-    setEditMode(false);
-    setEditItem(null);
-    setInsertAfterIndex(null);
-  };
-
-  const handleAddOrUpdate = async () => {
+  const handleSubmit = async () => {
     try {
-      if (selectedCommand === null) {
-        message.error("Please select a command before submitting");
-        return;
-      }
+      if (selectedCommand === null)
+        return message.error("Please select a command");
 
-      const commandName = Commands[selectedCommand].name;
-      const dataToSend = buildCommandData(commandName, formData);
+      const cmdName = Commands[selectedCommand].name;
+      const data = buildData(cmdName, formData);
 
       if (editMode && editItem?._id) {
         await axios.put(
           `http://localhost:3000/api/info/update/${editItem._id}`,
-          dataToSend
+          data
         );
         message.success("Data updated successfully!");
       } else {
-        await axios.post("http://localhost:3000/api/info/add", dataToSend);
-        message.success("Data added successfully");
+        await axios.post("http://localhost:3000/api/info/add", data);
+        message.success("Data added successfully!");
       }
 
-      if (typeof window.addRowBelow === "function") {
+      if (typeof window.addRowBelow === "function")
         window.addRowBelow(insertAfterIndex);
-      }
       onDataAdded(insertAfterIndex);
-      handleFormNull();
+      resetForm();
     } catch (err) {
       console.error(err);
       message.error("Server error!");
@@ -290,17 +234,10 @@ function AppHeader({
           padding: "0 20px",
         }}
       >
-        <div
-          style={{
-            fontWeight: "bold",
-            fontSize: "40px",
-            color: "black",
-            fontFamily: "sans-serif",
-            letterSpacing: "3px",
-          }}
-        >
+        <div style={{ fontWeight: "bold", fontSize: "40px", color: "black" }}>
           Task
         </div>
+
         <PlusOutlined
           style={{
             fontSize: "22px",
@@ -312,8 +249,10 @@ function AppHeader({
           }}
           onClick={() => {
             setEditMode(false);
-            setInsertAfterIndex(null); // add at end
+            setInsertAfterIndex(null);
             setModalOpen(true);
+            setSelectedCommand(null);
+            setFormData({});
           }}
         />
       </Header>
@@ -321,20 +260,25 @@ function AppHeader({
       <Modal
         title={editMode ? "Edit Info" : "Add Info"}
         open={modalOpen}
-        onOk={handleAddOrUpdate}
-        onCancel={handleFormNull}
+        onOk={handleSubmit}
+        onCancel={resetForm}
         okText={editMode ? "Update" : "Add"}
         cancelText="Cancel"
         width={"60%"}
       >
         <Select
+          showSearch
+          optionFilterProp="label"
+          filterOption={(input, option) =>
+            option?.label?.toLowerCase().includes(input.toLowerCase())
+          }
           placeholder="Select command"
           value={selectedCommand}
           style={{ width: "25%", marginBottom: "30px", marginTop: "20px" }}
-          onChange={(index) => handleChange(Number(index))}
+          onChange={(i) => handleCommandSelect(Number(i))}
         >
-          {Commands.map((Command, index) => (
-            <Select.Option key={index} value={index}>
+          {Commands.map((cmd, i) => (
+            <Select.Option key={i} value={i} label={cmd.name}>
               <div
                 style={{
                   display: "flex",
@@ -342,11 +286,9 @@ function AppHeader({
                   width: "90%",
                 }}
               >
-                {Command.name}
-                <Tooltip title={Command.tooltip}>
-                  <QuestionOutlined
-                    style={{ color: "orange", fontWeight: "bold" }}
-                  />
+                {cmd.name}
+                <Tooltip title={cmd.tooltip}>
+                  <QuestionOutlined style={{ color: "orange" }} />
                 </Tooltip>
               </div>
             </Select.Option>
@@ -354,8 +296,12 @@ function AppHeader({
         </Select>
 
         <hr style={{ marginBottom: "20px" }} />
-        {renderFields(selectedFields)}
-        {selectedCommand !== null && <Advance setFormData={setFormData} />}
+        {selectedCommand !== null && (
+          <>
+            {renderFields(Commands[selectedCommand].fields)}
+            <Advance setFormData={setFormData} />
+          </>
+        )}
       </Modal>
     </>
   );
